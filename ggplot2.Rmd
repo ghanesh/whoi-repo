@@ -102,6 +102,7 @@ ggplot(data = se)+
 ```{r}
 ggplot(se)+
   geom_line(aes(x=year,y=visitors,color=park_name))+
+  scale_color_viridis(discrete = TRUE,option = "B")
   theme_bw()
 ```
 ```{r several types of plots in one}
@@ -120,10 +121,11 @@ ggplot(data = visit_16, aes(x = state, y =visitors, fill = park_name))+
 
 #How to save a ggplot
 ```{r}
-myplot <- ggplot(data = visit_16, aes(x = state, y =visitors, fill = park_name, scale_color_discrete(inferno())))+ 
+ ggplot(data = visit_16, aes(x = state, y =visitors, fill = park_name))+ 
   geom_bar(stat="identity", position = "dodge")+
+  scale_fill_viridis(discrete = TRUE)
   
 myplot
 
-ggsave(filename = "myplot.png", myplot)
+#ggsave(filename = "myplot.png", myplot)
 ```
