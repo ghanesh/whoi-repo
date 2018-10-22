@@ -35,3 +35,48 @@ visit_16 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science
 mass <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/mass.csv")
 
 ```
+
+
+
+Start with the California ('ca') dataset
+Plot visualization to all CA BNtional Parks over time
+```{r}
+ggplot(data = ca) + 
+  geom_point(aes(x = year, y = visitors)) #what is the kind of plot = geom
+
+```
+next iteration:
+color code by park name
+```{r}
+ggplot(data = ca) + 
+  geom_point(aes(x = year, y = visitors, color = park_name)) # within aes , color is a variable mapping to a certain item
+
+```
+
+
+
+```{r}
+ggplot(data = ca) + 
+  geom_point(aes(x = year, y = visitors, color = park_name))+
+  labs( x = "Year", y = "Visitors", title = "California National Park Visitors") +
+  theme_bw() +#
+  theme(legend.title=element_blank())
+
+```
+```{r, exercise}
+ggplot(data = se) + 
+  geom_point(aes(x = year, y = visitors, color = state))+
+  labs( x = "Year", y = "Visitors", title = "Southeast National Park Visitors") +
+  theme_bw() +#
+  theme(legend.title=element_blank())
+
+```
+ggplot(data = se) + 
+  geom_point(aes(x = year, y = visitors, color = state))+
+  labs( x = "Year", y = "Visitors", title = "Southeast National Park Visitorsby state") +
+  theme_bw() +#
+  theme(legend.title=element_blank())+
+  axis
+  
+
+
