@@ -1,0 +1,98 @@
+---
+title: "Data wringling"
+author: "AHF"
+date: "October 22, 2018"
+output: html_document
+---
+```{r load libraries}
+library(tidyverse) # install.packages("tidyverse")
+library(skimr) #install.packages("skimr")
+
+```
+
+```{r read in data and explore}
+## read gapminder csv. Note the readr:: prefix identifies which package it's in
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+
+#inspect data
+head(gapminder)
+tail(gapminder)
+
+# summary statistics
+str(gapminder)
+summary(gapminder)
+skim(gapminder)
+names(gapminder)
+dim(gapminder)
+ncol(gapminder)
+nrow(gapminder)
+
+# reverse-engineer dim
+c(nrow(gapminder), ncol(gapminder))
+```
+
+
+#dplyr!
+```{r}
+#five main verbs of dplyr 
+#  filter() subsets data row-wise (observations)
+filter(gapminder, lifeExp <29)
+filter(gapminder, country == "Mexico")
+#for more tan one country
+filter(gapminder, country %in% c("Mexico","Peru"))
+filter(gapminder, country =="Mexico", year == 2002)
+x <- (filter(gapminder, country == "Sweden"))
+str(x)
+mean(x$lifeExp)
+```
+
+```{r}
+#select y column
+select(gapminder, year, lifeExp) #select only these columns
+select(gapminder, -continent,-lifeExp) # will exclude these olumns
+
+#use select and filter togerther
+gap_cambodia <- filter(gapminder, country == "Cambodia") 
+  gap_cambodia2 <-  select(gap_cambodia,-continent, -lifeExp)
+```
+
+The pipe operator will change your life!
+
+```{r}
+gapminder %>% head(3)
+# this is equivalent to:
+head(gapminder, 3)
+# so you could say "%>% = and then operate this function"
+
+gap_cambodia <-  gapminder  %>% filter(country == "Cambodia") 
+gap_cambodia2 <- select(gap_cambodia, -continent, -lifeExp)
+
+# or even better:
+gap_cambodia <-  gapminder %>% 
+  filter(country == "cambodia")  %>% 
+  select(-continent, -lifeExp)
+```
+
+
+```{r}
+
+#,mutate adds new variable
+
+gapminder %>% 
+  mutate(index = 1:nrow(gapminder)) 
+
+gapminder %>% 
+  mutate(gdp = pop*gdpPercap)
+```
+
+
+max (gdpPercap) of Egypt and Vietnam
+```{r}
+gapminder %>% 
+  filter(country %in% c("Egypt","Vietnam")) %>% 
+  mutate(gdp = pop * gdpPercap, 
+         max_gdp = max(gdp))
+
+
+```
+
