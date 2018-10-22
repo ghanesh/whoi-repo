@@ -15,6 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r set up library, echo=FALSE}
 #install.packages("tidyverse")
 library(tidyverse)
+#install.packages("ggthemes")
+library(ggthemes)
+library(viridis)
 ```
 
 
@@ -71,12 +74,56 @@ ggplot(data = se) +
   theme(legend.title=element_blank())
 
 ```
+```{r}
 ggplot(data = se) + 
   geom_point(aes(x = year, y = visitors, color = state))+
   labs( x = "Year", y = "Visitors", title = "Southeast National Park Visitorsby state") +
   theme_bw() +#
-  theme(legend.title=element_blank())+
-  axis
+  theme(legend.title = element_blank(), axis.text.x = element_text(angle = 45, size = 12, hjust =1))
   
+```
+
+# Faceting plots
+```{r}
+ggplot(data = se) +
+  geom_point(aes(x=year,y=visitors, color =park_name))+
+  facet_wrap(~state, scales ="free")
+theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r}
+ggplot(data = se)+
+  geom_jitter(aes(x=park_name,y=visitors),alpha=0.4, width = 0.1, color = "blue") +
+  coord_flip()
+```
 
 
+
+```{r}
+ggplot(se)+
+  geom_line(aes(x=year,y=visitors,color=park_name))+
+  theme_bw()
+```
+```{r several types of plots in one}
+ggplot(data=acadia, aes(x=year,y=visitors))+
+  geom_point() +
+  geom_line() +
+  geom_smooth()
+```
+
+```{r}
+ggplot(data = visit_16, aes(x = state, y =visitors, fill = park_name))+ 
+  geom_bar(stat="identity", position = "dodge")
+
+
+```
+
+#How to save a ggplot
+```{r}
+myplot <- ggplot(data = visit_16, aes(x = state, y =visitors, fill = park_name, scale_color_discrete(inferno())))+ 
+  geom_bar(stat="identity", position = "dodge")+
+  
+myplot
+
+ggsave(filename = "myplot.png", myplot)
+```
