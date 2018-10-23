@@ -1,0 +1,76 @@
+---
+title: "tidyr"
+author: "AHF"
+date: "October 23, 2018"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+## read in gapminder data in wide format
+gap_wide <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder_wide.csv')
+```
+
+## turning a wide dataset into a long dataset
+# start with gather()
+
+```{r}
+#in order to name new columns
+gap_long <-  gap_wide %>% 
+  gather(key = obstype_year,
+        value = obs_values,
+        -continent, -country)
+```
+
+#turning a column, which has a composed variable into several columns
+```{r}
+#in order to name new columns
+gap_long <-  gap_wide %>% 
+  gather(key = obstype_year,
+        value = obs_values,
+        -continent, -country) %>% 
+  separate(col = obstype_year,
+           into = c("obs_type","year"),
+           sep = "_", convert = TRUE)
+```
+
+#plot long data and unique()
+```{r}
+unique(gap_long$country)
+
+afghanistan_df <-  gap_long %>% 
+  filter(country == "Afghanistan",
+         obs_type == "lifeExp")
+
+ggplot(data = afghanistan_df, aes(x = year, y = obs_values)) +
+  geom_line()
+```
+
+
+```{r}
+life_df <-  gap_long %>% 
+  filter(obs_type == "lifeExp",
+         continent == "Americas")
+
+ggplot(data = life_df, aes(x = year, y = obs_values, color = country)) +
+  geom_line()
+```
+
+
+##Exercise
+*from gap_long calculate the mean life expectancy by continent from 1982 - 2007*
+```{r}
+#calculate mean
+after_1981 <- gap_long %>% 
+  filter(obs_type == "lifeExp",
+         year > 1981) %>% 
+  mean()
+
+mean(life)
+
+```
+
+
