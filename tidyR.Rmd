@@ -64,13 +64,41 @@ ggplot(data = life_df, aes(x = year, y = obs_values, color = country)) +
 *from gap_long calculate the mean life expectancy by continent from 1982 - 2007*
 ```{r}
 #calculate mean
+unique(gap_long$obs_type)
 after_1981 <- gap_long %>% 
   filter(obs_type == "lifeExp",
          year > 1981) %>% 
-  mean()
+  group_by(continent, year) %>% 
+  summarise(aveLExp = mean(obs_values)) %>% 
+  ungroup()
 
-mean(life)
 
+ggplot(data = after_1981, aes(x = year, y = aveLExp, color=continent)) + 
+  geom_line() +
+  labs(x = "year",
+       y = "Age (years)",
+       title = "Mean life expectancy") +
+  theme_bw()
 ```
 
+## spread 
+```{r}
+gap_normal <- gap_long %>%
+  spread(key = obs_type,
+         value = obs_values)
+```
 
+## spread & unite
+```{r}
+gap_rewide <- gap_long %>%
+  spread(key = obs_type,
+         value = obs_values) %>% 
+  unite(col=obs_year, gdpPercap, year)
+```
+
+```{r}
+gap_rewide <- gap_long %>%
+  unite(col=var_names, obs_type, year) %>% 
+  spread(key = var_names,
+         value = obs_values)
+```
